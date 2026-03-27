@@ -1,7 +1,3 @@
-#══════════════════════════════════════════════════════════════════════════════
-# 3D U-Net Brain Tumor Segmentation (BraTS)
-# Architecture modeled after ResNet-18.py style
-#══════════════════════════════════════════════════════════════════════════════
 
 from __future__ import print_function
 import argparse
@@ -69,7 +65,7 @@ def compute_brats_metrics(pred, target):
         # Dice score
         dice = compute_dice(p_np, t_np)
 
-        # Hausdorff distance 95
+        # Hausdorff distance 95 (From medpy)
         if p_np.sum() > 0 and t_np.sum() > 0:
             hausdorff = hd95(p_np, t_np)
         else:
@@ -335,7 +331,7 @@ def run_main(FLAGS):
     print(f"Found {len(data_dicts)} samples")
 
     # -----------------------------------------------------------------------
-    # Define Transforms
+    # Define Transforms (From MONAI)
     # -----------------------------------------------------------------------
     train_transforms = Compose([
         LoadImaged(keys=["image", "label"]),
@@ -406,7 +402,7 @@ def run_main(FLAGS):
             num_workers=FLAGS.num_workers
         )
 
-        # Create fresh model for each fold
+        # Create fresh model for each fold (From MONAI)
         model = UNet(
             spatial_dims=3,
             in_channels=4,
